@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
@@ -15,10 +16,13 @@ public class Game extends Canvas implements Runnable {
 
 	public static final String NAME = "Unknown";
 	public static final int HEIGHT = 240;
-	public static final int WIDTH = 320;
+	public static final int WIDTH = 360;
 	public static final int SCALE = 2;
-	
-	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+
+	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT,
+			BufferedImage.TYPE_INT_RGB);
+	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer())
+			.getData();
 
 	public static void main(String[] args) {
 		Game game = new Game();
@@ -56,9 +60,9 @@ public class Game extends Canvas implements Runnable {
 		int frames = 0;
 		int ticks = 0;
 		long lastTimer1 = System.currentTimeMillis();
-		
+
 		init();
-		
+
 		while (running) {
 			long now = System.nanoTime();
 			unprocessed += (now - lastTime) / nsPerTick;
@@ -70,18 +74,18 @@ public class Game extends Canvas implements Runnable {
 				unprocessed -= 1;
 				shouldRender = true;
 			}
-			
+
 			try {
 				Thread.sleep(2);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
+
 			if (shouldRender) {
 				frames++;
 				render();
 			}
-			
+
 			if (System.currentTimeMillis() - lastTimer1 > 1000) {
 				lastTimer1 += 1000;
 				System.out.println(ticks + " ticks, " + frames + " fps");
@@ -91,6 +95,11 @@ public class Game extends Canvas implements Runnable {
 		}
 	}
 
+	public void clear(int color) {
+		for (int i = 0; i < pixels.length; i++)
+			pixels[i] = color;
+	}
+
 	private void render() {
 		BufferStrategy bs = getBufferStrategy();
 		if (bs == null) {
@@ -98,12 +107,18 @@ public class Game extends Canvas implements Runnable {
 			requestFocus();
 			return;
 		}
-		
-		Graphics g = getGraphics();
+
+		for (int y = 0; y < HEIGHT; y++) {
+			for (int x = 0; x < WIDTH; x++) {
+				pixels[y * WIDTH + x] = (x & y) << 16 | x << 8 | y;
+			}
+		}
+
+		Graphics g = bs.getDrawGraphics();
 		g.fillRect(0, 0, getWidth(), getHeight());
-		
-		int ww = WIDTH * 3;
-		int hh = HEIGHT * 3;
+
+		int ww = WIDTH * SCALE;
+		int hh = HEIGHT * SCALE;
 		int xo = (getWidth() - ww) / 2;
 		int yo = (getHeight() - hh) / 2;
 		g.drawImage(image, xo, yo, ww, hh, null);
@@ -113,12 +128,12 @@ public class Game extends Canvas implements Runnable {
 
 	private void tick() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void init() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
