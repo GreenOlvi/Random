@@ -37,7 +37,9 @@ public class Screen {
 		int toffs = xTile * 8 + yTile * 8 * sheet.width;
 		
 		for (int y = 0; y < 8; y++) {
+			if (y + yp < 0 || y + yp > height) continue;
 			for (int x = 0; x < 8; x++) {
+				if (x + xp < 0 || x + xp > width) continue;
 				pixels[(x + xp) + (y + yp) * width] = sheet.pixels[x + y * sheet.width + toffs];
 			}
 		}

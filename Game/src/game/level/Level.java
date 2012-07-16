@@ -3,7 +3,10 @@ package game.level;
 import game.gfx.Screen;
 import game.level.tile.Tile;
 
+import java.util.Random;
+
 public class Level {
+	private Random random = new Random();
 	
 	public int width, height;
 	
@@ -12,11 +15,9 @@ public class Level {
 	public Level(int width, int height) {
 		this.width = width;
 		this.height = height;
-		tiles = new byte[width * height];
+		tiles = genLevel(width, height);
 		
-		for (int i = 0; i < width * height; i++) {
-			tiles[i] = 0;
-		}
+		
 	}
 	
 	public void renderBackground(Screen screen) {
@@ -28,9 +29,17 @@ public class Level {
 	}
 
 	private Tile getTile(int x, int y) {
-		if (x >= 0 && x < width && y >= 0 && y < width) {
-			return Tile.tiles[tiles[x + y * width]];
+		if (x < 0 || x >= width || y < 0 || y >= width) return Tile.rock;
+		return Tile.tiles[tiles[x + y * width]];
+	}
+	
+	private byte[] genLevel(int width, int height) {
+		byte[] tiles = new byte[width * height];
+		
+		for (int i = 0; i < width * height; i++) {
+			tiles[i] = random.nextBoolean() == true ? Tile.grass.id : Tile.rock.id;
 		}
-		return Tile.grass;
+		
+		return tiles;
 	}
 }

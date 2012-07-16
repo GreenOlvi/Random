@@ -111,7 +111,6 @@ public class Game extends Canvas implements Runnable {
 		}
 
 		level.renderBackground(screen);
-		screen.render(100, 100, 0);
 		
 		for (int y = 0; y < screen.height; y++) {
 			for (int x = 0; x < screen.width; x++) {
