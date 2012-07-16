@@ -2,6 +2,7 @@ package game;
 
 import game.gfx.Screen;
 import game.gfx.SpriteSheet;
+import game.level.Level;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -27,6 +28,8 @@ public class Game extends Canvas implements Runnable {
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 	
 	private Screen screen;
+	
+	private Level level;
 
 	public static void main(String[] args) {
 		Game game = new Game();
@@ -107,7 +110,7 @@ public class Game extends Canvas implements Runnable {
 			return;
 		}
 
-		screen.renderFractal();
+		level.renderBackground(screen);
 		screen.render(100, 100, 0);
 		
 		for (int y = 0; y < screen.height; y++) {
@@ -140,6 +143,8 @@ public class Game extends Canvas implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		level = new Level(10, 10);
 	}
 
 }
