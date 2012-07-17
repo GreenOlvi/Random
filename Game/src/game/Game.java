@@ -28,6 +28,7 @@ public class Game extends Canvas implements Runnable {
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 	
 	private Screen screen;
+	private InputHandler input = new InputHandler(this);
 	private int xOffset = 0;
 	private int yOffset = 0;
 	
@@ -133,8 +134,10 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	private void tick() {
-		xOffset += 1;
-		yOffset += 1;
+		if (input.up.down) yOffset--;
+		if (input.down.down) yOffset++;
+		if (input.left.down) xOffset--;
+		if (input.right.down) xOffset++;
 		screen.setOffset(xOffset, yOffset);
 	}
 
