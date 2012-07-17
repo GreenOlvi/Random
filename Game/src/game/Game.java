@@ -19,7 +19,7 @@ import javax.swing.JFrame;
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
 
-	public static final String NAME = "Unknown";
+	public static final String NAME = "Game";
 	public static final int HEIGHT = 240;
 	public static final int WIDTH = 360;
 	public static final int SCALE = 2;
@@ -28,6 +28,8 @@ public class Game extends Canvas implements Runnable {
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 	
 	private Screen screen;
+	private int xOffset = 0;
+	private int yOffset = 0;
 	
 	private Level level;
 
@@ -131,8 +133,9 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	private void tick() {
-		// TODO Auto-generated method stub
-
+		xOffset += 1;
+		yOffset += 1;
+		screen.setOffset(xOffset, yOffset);
 	}
 
 	private void init() {
@@ -143,7 +146,7 @@ public class Game extends Canvas implements Runnable {
 			e.printStackTrace();
 		}
 		
-		level = new Level(10, 10);
+		level = new Level(100, 100);
 	}
 
 }
