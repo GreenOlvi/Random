@@ -113,6 +113,7 @@ public class Game extends Canvas implements Runnable {
 			return;
 		}
 
+		screen.clear(0);
 		level.renderBackground(screen);
 		
 		for (int y = 0; y < screen.height; y++) {
@@ -145,7 +146,6 @@ public class Game extends Canvas implements Runnable {
 		try {
 			this.screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(Game.class.getResourceAsStream("/icons.png"))));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
