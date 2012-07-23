@@ -13,6 +13,5 @@ public class GrassTile extends Tile {
 	public void render(Screen screen, Level level, int x, int y) {
 		screen.render(x * 8, y * 8, 0);
 	}
-	
 
 }

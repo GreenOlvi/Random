@@ -8,6 +8,9 @@ public class Screen {
 	private SpriteSheet sheet;
 	
 	private int xOffset, yOffset;
+	
+	public static final int BIT_MIRROR_X = 1;
+	public static final int BIT_MIRROR_Y = 2;
 
 	public Screen(int width, int height, SpriteSheet sheet) {
 		this.sheet = sheet;
@@ -37,8 +40,15 @@ public class Screen {
 	}
 	
 	public void render(int xp, int yp, int tile) {
+		render(xp, yp, tile, 0);
+	}
+	
+	public void render(int xp, int yp, int tile, int bits) {
 		xp -= xOffset;
 		yp -= yOffset;
+		
+		boolean mirrorX = (bits & BIT_MIRROR_X) > 0;
+		boolean mirrorY = (bits & BIT_MIRROR_Y) > 0;
 		
 		int xTile = tile % 32;
 		int yTile = tile / 32;
@@ -46,9 +56,11 @@ public class Screen {
 		
 		for (int y = 0; y < 8; y++) {
 			if (y + yp < 0 || y + yp >= height) continue;
+			int ys = mirrorY ? 7 - y : y;
 			for (int x = 0; x < 8; x++) {
 				if (x + xp < 0 || x + xp >= width) continue;
-				pixels[(x + xp) + (y + yp) * width] = sheet.pixels[x + y * sheet.width + toffs];
+				int xs = mirrorX ? 7 - x : x;
+				pixels[(x + xp) + (y + yp) * width] = sheet.pixels[xs + ys * sheet.width + toffs];
 			}
 		}
 	}
