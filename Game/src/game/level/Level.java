@@ -23,7 +23,7 @@ public class Level {
 		}
 	}
 
-	private Tile getTile(int x, int y) {
+	public Tile getTile(int x, int y) {
 		if (x < 0 || y < 0 || x >= width || y >= width) return Tile.rock;
 		return Tile.tiles[tiles[x + y * width]];
 	}

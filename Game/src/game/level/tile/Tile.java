@@ -11,6 +11,11 @@ public class Tile {
 	
 	public final byte id;
 	
+	public static final byte BIT_LINKS_ABOVE = 1;
+	public static final byte BIT_LINKS_RIGHT = 2;
+	public static final byte BIT_LINKS_BELOW = 4;
+	public static final byte BIT_LINKS_LEFT  = 8;
+	
 	public Tile(int id) {
 		this.id = (byte) id;
 		if (tiles[id] != null) throw new RuntimeException("Duplicate tile ids");
