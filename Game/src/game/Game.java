@@ -1,5 +1,6 @@
 package game;
 
+import game.entity.Player;
 import game.gfx.Screen;
 import game.gfx.SpriteSheet;
 import game.level.Level;
@@ -33,6 +34,7 @@ public class Game extends Canvas implements Runnable {
 	private int yOffset = 0;
 	
 	private Level level;
+	private Player player;
 
 	public static void main(String[] args) {
 		Game game = new Game();
@@ -116,6 +118,8 @@ public class Game extends Canvas implements Runnable {
 		screen.clear(0);
 		level.renderBackground(screen);
 		
+		player.render(screen);
+		
 		for (int y = 0; y < screen.height; y++) {
 			for (int x = 0; x < screen.width; x++) {
 				pixels[x + y * WIDTH] = screen.pixels[x + y * WIDTH];
@@ -150,6 +154,7 @@ public class Game extends Canvas implements Runnable {
 		}
 		
 		level = new Level(100, 100);
+		player = new Player();
 	}
 
 }
