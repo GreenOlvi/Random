@@ -1,11 +1,17 @@
 package game.gfx;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
 public class Screen {
 	
 	public final int width, height;
-	public int[] pixels;
+	public Image image;
+	private Graphics g;
 	
-	private SpriteSheet sheet;
+	public SpriteSheet sheet;
 	
 	private int xOffset, yOffset;
 	
@@ -20,23 +26,13 @@ public class Screen {
 		xOffset = 0;
 		yOffset = 0;
 		
-		pixels = new int[width * height];
+		image = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+		g = image.getGraphics();
 	}
 
-	public void clear(int color) {
-		for (int i = 0; i < pixels.length; i++)
-			pixels[i] = color;
-	}
-	
-	public void renderFractal() {
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				int draw = 1;
-				if ((x & y) > 0)
-					draw = 0;
-				pixels[y * width + x] = (draw * x) << 16 | (draw * y) << 8 | (draw);
-			}
-		}	
+	public void clear() {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, width, height);
 	}
 	
 	public void render(int xp, int yp, int tile) {
@@ -44,24 +40,16 @@ public class Screen {
 	}
 	
 	public void render(int xp, int yp, int tile, int bits) {
+		xp *= sheet.tileWidth;
+		yp *= sheet.tileHeight;
 		xp -= xOffset;
 		yp -= yOffset;
 		
 		boolean mirrorX = (bits & BIT_MIRROR_X) > 0;
 		boolean mirrorY = (bits & BIT_MIRROR_Y) > 0;
 		
-		int xTile = tile % 32;
-		int yTile = tile / 32;
-		int toffs = xTile * 8 + yTile * 8 * sheet.width;
-		
-		for (int y = 0; y < 8; y++) {
-			if (y + yp < 0 || y + yp >= height) continue;
-			int ys = mirrorY ? 7 - y : y;
-			for (int x = 0; x < 8; x++) {
-				if (x + xp < 0 || x + xp >= width) continue;
-				int xs = mirrorX ? 7 - x : x;
-				pixels[(x + xp) + (y + yp) * width] = sheet.pixels[xs + ys * sheet.width + toffs];
-			}
+		if (xp > - sheet.tileWidth && yp > - sheet.tileHeight && xp <= this.width && yp <= this.height) {
+			g.drawImage(sheet.tiles.get(tile), xp, yp, 32, 32, null);
 		}
 	}
 	

@@ -30,7 +30,7 @@ public class RockTile extends Tile {
 			spriteIndex |= Tile.BIT_LINKS_RIGHT;
 		}
 		
-		screen.render(x * 8, y * 8, 32 + spriteIndex);
+		screen.render(x, y, 17);
 	}
 	
 

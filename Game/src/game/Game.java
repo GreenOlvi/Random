@@ -10,8 +10,6 @@ import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -21,13 +19,10 @@ public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
 
 	public static final String NAME = "Game";
-	public static final int HEIGHT = 240;
-	public static final int WIDTH = 360;
+	public static final int HEIGHT = 400;
+	public static final int WIDTH = 640;
 	public static final int SCALE = 2;
 
-	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-	
 	private Screen screen;
 	private InputHandler input = new InputHandler(this);
 	private int xOffset = 0;
@@ -115,17 +110,11 @@ public class Game extends Canvas implements Runnable {
 			return;
 		}
 
-		screen.clear(0);
+		screen.clear();
 		level.renderBackground(screen);
 		
 		player.render(screen);
 		
-		for (int y = 0; y < screen.height; y++) {
-			for (int x = 0; x < screen.width; x++) {
-				pixels[x + y * WIDTH] = screen.pixels[x + y * WIDTH];
-			}
-		}
-
 		Graphics g = bs.getDrawGraphics();
 		g.fillRect(0, 0, getWidth(), getHeight());
 
@@ -133,7 +122,7 @@ public class Game extends Canvas implements Runnable {
 		int hh = HEIGHT * SCALE;
 		int xo = (getWidth() - ww) / 2;
 		int yo = (getHeight() - hh) / 2;
-		g.drawImage(image, xo, yo, ww, hh, null);
+		g.drawImage(screen.image, xo, yo, ww, hh, null);
 		g.dispose();
 		bs.show();
 	}
@@ -148,7 +137,7 @@ public class Game extends Canvas implements Runnable {
 
 	private void init() {
 		try {
-			this.screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(Game.class.getResourceAsStream("/icons.png"))));
+			this.screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(Game.class.getResourceAsStream("/grass_rock.png")), 32, 32));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
